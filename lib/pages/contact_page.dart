@@ -1,14 +1,16 @@
 import 'dart:io';
+import 'package:contact_buddy/models/contact_list_interface.dart';
 import 'package:contact_buddy/models/contacts_model.dart';
 import 'package:contact_buddy/provider/contacts_provider.dart';
 import 'package:contact_buddy/validators/utils/snackbar_utils.dart';
 import 'package:contact_buddy/validators/messages/snakbar_messages.dart';
 import 'package:contact_buddy/widgets/fading_text.dart';
-import 'package:contact_buddy/widgets/show_add_dialog.dart';
 import 'package:contact_buddy/widgets/show_update_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:provider/provider.dart';
+
+import '../widgets/show_add_dialog.dart';
 
 class ContactsList extends StatefulWidget {
   const ContactsList({super.key});
@@ -17,7 +19,8 @@ class ContactsList extends StatefulWidget {
   State<ContactsList> createState() => _ContactsListState();
 }
 
-class _ContactsListState extends State<ContactsList> {
+class _ContactsListState extends State<ContactsList>
+    implements ContactCallback {
   late ContactsProvider _contactsProvider;
 
   @override
@@ -58,12 +61,8 @@ class _ContactsListState extends State<ContactsList> {
     final TextEditingController phoneNumberController = TextEditingController();
     final TextEditingController emailConatoller = TextEditingController();
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Contacts Buddy'),
-        backgroundColor: Colors.amber,
-      ),
-      body: Column(
+    return SafeArea(
+      child: Column(
         children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -152,23 +151,28 @@ class _ContactsListState extends State<ContactsList> {
               },
             ),
           ),
+          FloatingActionButton(
+            backgroundColor: Colors.amber,
+            onPressed: () {
+              AddContactDialog.showAddDialog(
+                context,
+                nameController,
+                phoneNumberController,
+                emailConatoller,
+                (newContact) {
+                  _addContact(newContact);
+                },
+              );
+            },
+            child: const Icon(Icons.add),
+          ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.amber,
-        onPressed: () {
-          AddContactDialog.showAddDialog(
-            context,
-            nameController,
-            phoneNumberController,
-            emailConatoller,
-            (newContact) {
-              _addContact(newContact);
-            },
-          );
-        },
-        child: const Icon(Icons.add),
-      ),
     );
+  }
+
+  @override
+  void addContactCallback(Contact contact) {
+    // TODO: implement addContactCallback
   }
 }
