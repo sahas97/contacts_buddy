@@ -133,6 +133,7 @@ class AddContactDialog {
                           imagesProvider.clearImage();
                           nameController.clear();
                           phoneNumberController.clear();
+                          emailController.clear();
 
                           if (context.mounted) {
                             if (context.mounted) Navigator.pop(context);

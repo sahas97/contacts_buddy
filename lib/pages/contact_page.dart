@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:contact_buddy/models/contact_list_interface.dart';
 import 'package:contact_buddy/models/contacts_model.dart';
 import 'package:contact_buddy/provider/contacts_provider.dart';
 import 'package:contact_buddy/validators/utils/snackbar_utils.dart';
@@ -19,9 +18,12 @@ class ContactsList extends StatefulWidget {
   State<ContactsList> createState() => _ContactsListState();
 }
 
-class _ContactsListState extends State<ContactsList>
-    implements ContactCallback {
+class _ContactsListState extends State<ContactsList> {
   late ContactsProvider _contactsProvider;
+
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController emailConatoller = TextEditingController();
 
   @override
   void initState() {
@@ -34,9 +36,9 @@ class _ContactsListState extends State<ContactsList>
     await _contactsProvider.fetchContacts();
   }
 
-  Future<void> _addContact(Contact contact) async {
-    await _contactsProvider.addContact(contact);
-  }
+  // Future<void> _addContact(Contact contact) async {
+  //   await _contactsProvider.addContact(contact);
+  // }
 
   Future<void> _updateContact(Contact updatedContact) async {
     await _contactsProvider.updateContact(updatedContact);
@@ -57,10 +59,6 @@ class _ContactsListState extends State<ContactsList>
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController phoneNumberController = TextEditingController();
-    final TextEditingController emailConatoller = TextEditingController();
-
     return SafeArea(
       child: Column(
         children: [
@@ -151,28 +149,8 @@ class _ContactsListState extends State<ContactsList>
               },
             ),
           ),
-          FloatingActionButton(
-            backgroundColor: Colors.amber,
-            onPressed: () {
-              AddContactDialog.showAddDialog(
-                context,
-                nameController,
-                phoneNumberController,
-                emailConatoller,
-                (newContact) {
-                  _addContact(newContact);
-                },
-              );
-            },
-            child: const Icon(Icons.add),
-          ),
         ],
       ),
     );
-  }
-
-  @override
-  void addContactCallback(Contact contact) {
-    // TODO: implement addContactCallback
   }
 }

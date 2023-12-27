@@ -1,17 +1,29 @@
-import 'package:contact_buddy/models/contacts_model.dart';
-import 'package:contact_buddy/widgets/show_add_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:provider/provider.dart';
-import '../../models/contact_list_interface.dart';
-import '../../provider/app_bar_icon_provider.dart';
+import '../../models/contacts_model.dart';
+import '../../provider/contacts_provider.dart';
 import '../../provider/navigation_provider.dart';
 import '../../pages/calling_page.dart';
 import '../../pages/contact_page.dart';
 import '../../pages/qr_scannner_page.dart';
+import '../show_add_dialog.dart';
 
-class AppNavigator extends StatelessWidget {
+class AppNavigator extends StatefulWidget {
   const AppNavigator({super.key});
+
+  @override
+  State<AppNavigator> createState() => _AppNavigatorState();
+}
+
+class _AppNavigatorState extends State<AppNavigator> {
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController emailConatoller = TextEditingController();
+
+  Future<void> _addContact(Contact contact) async {
+    await context.read<ContactsProvider>().addContact(contact);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +44,14 @@ class AppNavigator extends StatelessWidget {
                 IconButton(
                   icon: const Icon(Icons.add),
                   onPressed: () {
-                    if (context.read<AppBarIconProvider>().currentIcon ==
-                        Icons.add) {
-                      _showAddContactDialog(context);
-                    }
+                    // Handle icon-specific action for conatct page
+                    AddContactDialog.showAddDialog(
+                      context,
+                      nameController,
+                      phoneNumberController,
+                      emailConatoller,
+                      (newContact) => _addContact(newContact),
+                    );
                   },
                 ),
               if (navigationProvider.selectedIndex == 2)
@@ -48,7 +64,11 @@ class AppNavigator extends StatelessWidget {
             ],
           ),
           bottomNavigationBar: Padding(
-            padding: const EdgeInsets.all(15.0),
+            padding: const EdgeInsets.only(
+              left: 15.0,
+              right: 15.0,
+              bottom: 15.0,
+            ),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
@@ -95,14 +115,14 @@ class AppNavigator extends StatelessWidget {
             ),
           ),
           body: Center(
-            child: _getPage(navigationProvider.selectedIndex),
+            child: getPage(navigationProvider.selectedIndex),
           ),
         );
       },
     );
   }
 
-  Widget _getPage(int index) {
+  Widget getPage(int index) {
     switch (index) {
       case 0:
         return const CallingPage();
@@ -113,26 +133,5 @@ class AppNavigator extends StatelessWidget {
       default:
         return const SizedBox.shrink();
     }
-  }
-
-  void _showAddContactDialog(BuildContext context) {
-    final TextEditingController nameController = TextEditingController();
-    final TextEditingController phoneNumberController = TextEditingController();
-    final TextEditingController emailController = TextEditingController();
-
-    AddContactDialog.showAddDialog(
-      context,
-      nameController,
-      phoneNumberController,
-      emailController,
-      addContactCallback,
-    );
-  }
-
-  @override
-  void addContactCallback(Contact contact) {
-    // Add your logic to handle the new contact
-    // You can access the contact parameter here
-    // and add it to your data source.
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 
 class CallingPage extends StatefulWidget {
   const CallingPage({super.key});
@@ -169,7 +170,10 @@ class _CallingPageState extends State<CallingPage> {
                   child: Padding(
                     padding: const EdgeInsets.all(5.0),
                     child: TextButton(
-                      onPressed: () {},
+                      onPressed: () async =>
+                          await FlutterPhoneDirectCaller.callNumber(
+                        phoneNumberController.text,
+                      ),
                       style: TextButton.styleFrom(
                         elevation: 0.0,
                         foregroundColor: Colors.white,
