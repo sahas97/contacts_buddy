@@ -9,8 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/show_add_dialog.dart';
-
 class ContactsList extends StatefulWidget {
   const ContactsList({super.key});
 

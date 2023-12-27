@@ -15,6 +15,11 @@ class CallingProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void clearAll() {
+    _phoneNumberController.clear();
+    notifyListeners();
+  }
+
   void clear() {
     if (_phoneNumberController.text.isNotEmpty) {
       _phoneNumberController.text = _phoneNumberController.text
@@ -23,7 +28,7 @@ class CallingProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> makeCall() async {
+  Future<void> makeCall(BuildContext context) async {
     await FlutterPhoneDirectCaller.callNumber(phoneNumber);
   }
 }
