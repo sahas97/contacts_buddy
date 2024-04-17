@@ -92,8 +92,8 @@ class AddContactDialog {
                   ),
                   style: GoogleFonts.montserrat(
                     textStyle: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.black54,
+                      fontSize: 15,
+                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -109,8 +109,8 @@ class AddContactDialog {
                   ),
                   style: GoogleFonts.montserrat(
                     textStyle: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.black54,
+                      fontSize: 15,
+                      color: Colors.black,
                     ),
                   ),
                 ),
@@ -126,8 +126,8 @@ class AddContactDialog {
                   ),
                   style: GoogleFonts.montserrat(
                     textStyle: const TextStyle(
-                      fontSize: 18,
-                      color: Colors.black54,
+                      fontSize: 15,
+                      color: Colors.black,
                     ),
                   ),
                 ),

@@ -45,6 +45,7 @@ class _AppNavigatorState extends State<AppNavigator> {
     return Consumer<NavigationProvider>(
       builder: (context, navigationProvider, child) {
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           appBar: AppBar(
             title: PopupMenuButton<Menu>(
               popUpAnimationStyle: _animationStyle,

@@ -36,7 +36,9 @@ class _QrScannerPageState extends State<QrScannerPage> {
   Future<String?> getContact() async {
     userContact = await _databaseHelper.getUserContact() ??
         Contact(name: '', phoneNumber: '', eMail: '', imagePath: '');
-    return '${userContact.name}*${userContact.phoneNumber}*${userContact.eMail}';
+    return userContact.name.isEmpty
+        ? null
+        : '${userContact.name}*${userContact.phoneNumber}*${userContact.eMail}';
   }
 
   final TextEditingController nameController = TextEditingController();
@@ -117,9 +119,10 @@ class _QrScannerPageState extends State<QrScannerPage> {
                       )
                     : Text(
                         'no QR available please add your profile data',
+                        textAlign: TextAlign.center,
                         style: GoogleFonts.montserrat(
                           textStyle: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 15,
                             color: Colors.black45,
                             fontWeight: FontWeight.w500,
                           ),
@@ -127,6 +130,9 @@ class _QrScannerPageState extends State<QrScannerPage> {
                       );
               }
             },
+          ),
+          const SizedBox(
+            height: 20,
           ),
           SizedBox(
             width: 160,
