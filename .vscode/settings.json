@@ -1,4 +1,5 @@
 {
     "docwriter.style": "Auto-detect",
-    "docwriter.hotkey.windows": "Alt + ."
+    "docwriter.hotkey.windows": "Alt + .",
+    "java.configuration.updateBuildConfiguration": "interactive"
 }

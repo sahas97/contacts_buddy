@@ -6,11 +6,13 @@ import 'package:path/path.dart';
 class DatabaseHelper {
   Database? _database;
   static const String tableContacts = 'contacts';
+  static const String tableUserContact = 'user_contact';
   static const String columnId = 'id';
   static const String columnName = 'name';
   static const String columnPhoneNumber = 'phoneNumber';
   static const String columnEmail = 'email';
   static const String imagePath = 'imagePath';
+  static const String columnUserId = 'userId'; // Foreign key
 
   Future<Database?> initDatabase() async {
     final databasesPath = await getDatabasesPath();
@@ -19,9 +21,12 @@ class DatabaseHelper {
     return _database ??= await openDatabase(
       dbPath,
       version: 1,
-      onCreate: (db, version) {
-        db.execute(
+      onCreate: (db, version) async {
+        await db.execute(
           'CREATE TABLE $tableContacts($columnId INTEGER PRIMARY KEY, $columnName TEXT, $columnPhoneNumber TEXT, $columnEmail TEXT, $imagePath TEXT)',
+        );
+        await db.execute(
+          'CREATE TABLE $tableUserContact($columnId INTEGER PRIMARY KEY, $columnName TEXT, $columnPhoneNumber TEXT, $columnEmail TEXT,  $imagePath TEXT)',
         );
       },
     );
@@ -73,7 +78,64 @@ class DatabaseHelper {
 
       return maps.isEmpty ? Contact.fromMap(maps.first) : null;
     } catch (e) {
-      debugPrint('Error deleting contact: $e');
+      debugPrint('Error getting contact: $e');
+      return null;
+    }
+  }
+
+  //CRUD for User Contact
+  Future<void> addOrUpdateUserContact(Contact contact) async {
+    try {
+      final db = await initDatabase();
+      await db!.transaction((txn) async {
+        // Check if a user contact already exists
+        final existingContacts = await txn.query(
+          tableUserContact,
+          where: '$columnId = ?',
+          whereArgs: [1], // Check for ID = 1
+        );
+
+        if (existingContacts.isNotEmpty) {
+          // Update existing contact
+          await txn.update(
+            tableUserContact,
+            contact.toMap(),
+            where: '$columnId = ?',
+            whereArgs: [1],
+          );
+        } else {
+          // Create new contact with ID = 1
+          await txn.insert(
+            tableUserContact,
+            contact.toMap()
+              ..putIfAbsent('id', () => 1), // Set id to 1 if not provided
+          );
+        }
+      });
+    } catch (e) {
+      debugPrint('Error adding or updating user contact: $e');
+    }
+  }
+
+  // Get user contact
+  Future<Contact?> getUserContact() async {
+    try {
+      final db = await initDatabase();
+      final List<Map<String, dynamic>> userContacts = await db!.query(
+        tableUserContact,
+        where: '$columnId = ?',
+        whereArgs: [1], // Check for ID = 1
+      );
+
+      return userContacts.isNotEmpty
+          ? Contact.fromMap(userContacts.first)
+          : Contact(
+              name: '',
+              phoneNumber: '',
+              imagePath: '',
+            );
+    } catch (e) {
+      debugPrint('Error getting user contact: $e');
       return null;
     }
   }

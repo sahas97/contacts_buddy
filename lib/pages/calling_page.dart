@@ -1,5 +1,6 @@
 import 'package:contact_buddy/provider/calling_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 class CallingPage extends StatefulWidget {
@@ -27,16 +28,27 @@ class _CallingPageState extends State<CallingPage> {
                     controller: callingProvider.phoneNumberController,
                     keyboardType: TextInputType.phone,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 20.0),
+                    style: GoogleFonts.montserrat(
+                      textStyle: const TextStyle(
+                        fontSize: 20,
+                        color: Colors.black54,
+                      ),
+                    ),
                     readOnly: true,
                     decoration: InputDecoration(
                       hintText: 'Enter phone number',
-                      hintStyle: const TextStyle(fontSize: 18.0),
+                      hintStyle: GoogleFonts.montserrat(
+                        textStyle: const TextStyle(
+                          fontSize: 18,
+                          color: Colors.black54,
+                        ),
+                      ),
                       suffixIcon: callingProvider.isNotEmpty
                           ? IconButton(
                               onPressed: () => callingProvider.clearAll(),
                               icon: const Icon(
                                 Icons.clear,
+                                color: Colors.black54,
                               ),
                             )
                           : null,
@@ -73,9 +85,14 @@ class _CallingPageState extends State<CallingPage> {
                               foregroundColor: Colors.black,
                               backgroundColor: Colors.white,
                             ),
-                            child: const Text(
+                            child: Text(
                               '*',
-                              style: TextStyle(fontSize: 24.0),
+                              style: GoogleFonts.montserrat(
+                                textStyle: const TextStyle(
+                                  fontSize: 24,
+                                  color: Colors.black54,
+                                ),
+                              ),
                             ),
                           ),
                         );
@@ -91,9 +108,14 @@ class _CallingPageState extends State<CallingPage> {
                               foregroundColor: Colors.black,
                               backgroundColor: Colors.white,
                             ),
-                            child: const Text(
+                            child: Text(
                               '0',
-                              style: TextStyle(fontSize: 24.0),
+                              style: GoogleFonts.montserrat(
+                                textStyle: const TextStyle(
+                                  fontSize: 24,
+                                  color: Colors.black54,
+                                ),
+                              ),
                             ),
                           ),
                         );
@@ -109,9 +131,14 @@ class _CallingPageState extends State<CallingPage> {
                               foregroundColor: Colors.black,
                               backgroundColor: Colors.white,
                             ),
-                            child: const Text(
+                            child: Text(
                               '#',
-                              style: TextStyle(fontSize: 24.0),
+                              style: GoogleFonts.montserrat(
+                                textStyle: const TextStyle(
+                                  fontSize: 24,
+                                  color: Colors.black54,
+                                ),
+                              ),
                             ),
                           ),
                         );
@@ -131,7 +158,12 @@ class _CallingPageState extends State<CallingPage> {
                           ),
                           child: Text(
                             (index + 1).toString(),
-                            style: const TextStyle(fontSize: 24.0),
+                            style: GoogleFonts.montserrat(
+                              textStyle: const TextStyle(
+                                fontSize: 24,
+                                color: Colors.black54,
+                              ),
+                            ),
                           ),
                         ),
                       );
@@ -152,16 +184,15 @@ class _CallingPageState extends State<CallingPage> {
                         child: Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: TextButton(
-                            onPressed: () {
-                              callingProvider.clear();
-                            },
+                            onPressed: () async =>
+                                await callingProvider.makeCall(context),
                             style: TextButton.styleFrom(
                               elevation: 0.0,
-                              foregroundColor: Colors.white,
-                              backgroundColor: Colors.red,
+                              foregroundColor: Colors.black,
+                              backgroundColor: Colors.white,
                             ),
                             child: const Icon(
-                              Icons.backspace_outlined,
+                              Icons.call_outlined,
                               size: 30,
                             ),
                           ),
@@ -174,15 +205,16 @@ class _CallingPageState extends State<CallingPage> {
                         child: Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: TextButton(
-                            onPressed: () async =>
-                                await callingProvider.makeCall(context),
+                            onPressed: () {
+                              callingProvider.clear();
+                            },
                             style: TextButton.styleFrom(
                               elevation: 0.0,
-                              foregroundColor: Colors.white,
-                              backgroundColor: Colors.green,
+                              foregroundColor: Colors.black,
+                              backgroundColor: Colors.white,
                             ),
                             child: const Icon(
-                              Icons.call,
+                              Icons.backspace_outlined,
                               size: 30,
                             ),
                           ),

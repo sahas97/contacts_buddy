@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FadingText extends StatefulWidget {
   final String message;
@@ -35,7 +36,11 @@ class _FadingTextState extends State<FadingText>
       opacity: _opacity,
       child: Text(
         widget.message,
-        style: const TextStyle(fontSize: 18),
+        style: GoogleFonts.montserrat(
+          textStyle: const TextStyle(
+            color: Colors.black38,
+          ),
+        ),
       ),
     );
   }

@@ -6,6 +6,7 @@ import 'package:contact_buddy/validators/messages/snakbar_messages.dart';
 import 'package:flutter/material.dart';
 import 'package:contact_buddy/models/contacts_model.dart';
 import 'package:contact_buddy/validators/input_validators.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -52,8 +53,21 @@ class UpdateContactDialog {
             builder: (context, imagesProvider, child) {
               return SimpleDialog(
                 alignment: Alignment.center,
-                title: const Center(child: Text('Update Contact')),
-                contentPadding: const EdgeInsets.all(20.0),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                backgroundColor: Colors.white,
+                title: Center(
+                    child: Text(
+                  'Update Contact',
+                  style: GoogleFonts.montserrat(
+                    textStyle: const TextStyle(
+                      color: Colors.black87,
+                      fontSize: 20,
+                    ),
+                  ),
+                )),
+                contentPadding: const EdgeInsets.all(30.0),
                 children: <Widget>[
                   Center(
                     child: CircleAvatar(
@@ -71,26 +85,68 @@ class UpdateContactDialog {
                     children: [
                       IconButton(
                         onPressed: () => getImage(ImageSource.camera),
-                        icon: const Icon(Icons.camera),
+                        icon: const Icon(
+                          Icons.camera_outlined,
+                        ),
                       ),
                       IconButton(
                         onPressed: () => getImage(ImageSource.gallery),
-                        icon: const Icon(Icons.image),
+                        icon: const Icon(
+                          Icons.image_outlined,
+                        ),
                       )
                     ],
                   ),
                   TextField(
                     controller: updatedNameController,
-                    decoration: const InputDecoration(labelText: 'Name'),
+                    decoration: InputDecoration(
+                      labelText: 'Name',
+                      labelStyle: GoogleFonts.montserrat(
+                        textStyle: const TextStyle(
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                    style: GoogleFonts.montserrat(
+                      textStyle: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                   TextField(
                     controller: updatedPhoneNumberController,
-                    decoration:
-                        const InputDecoration(labelText: 'Phone Number'),
+                    decoration: InputDecoration(
+                      labelText: 'Phone Number',
+                      labelStyle: GoogleFonts.montserrat(
+                        textStyle: const TextStyle(
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                    style: GoogleFonts.montserrat(
+                      textStyle: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                   TextField(
                     controller: updatedEmailController,
-                    decoration: const InputDecoration(labelText: 'email'),
+                    decoration: InputDecoration(
+                      labelText: 'E mail',
+                      labelStyle: GoogleFonts.montserrat(
+                        textStyle: const TextStyle(
+                          color: Colors.black54,
+                        ),
+                      ),
+                    ),
+                    style: GoogleFonts.montserrat(
+                      textStyle: const TextStyle(
+                        fontSize: 15,
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                   const SizedBox(
                     height: 20.0,
@@ -99,17 +155,17 @@ class UpdateContactDialog {
                     padding: const EdgeInsets.all(10.0),
                     child: Container(
                       decoration: BoxDecoration(
-                        color: Colors.amber,
+                        color: Colors.black,
                         borderRadius: BorderRadius.circular(10.0),
                       ),
                       child: const Center(
                         child: Padding(
                           padding: EdgeInsets.all(10.0),
                           child: Text(
-                            'UPDATE',
+                            'Update',
                             style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 23,
+                              color: Colors.white,
+                              fontSize: 20,
                               fontWeight: FontWeight.bold,
                             ),
                           ),

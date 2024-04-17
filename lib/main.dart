@@ -2,7 +2,8 @@ import 'package:contact_buddy/provider/calling_provider.dart';
 import 'package:contact_buddy/provider/contacts_provider.dart';
 import 'package:contact_buddy/provider/image_provider.dart';
 import 'package:contact_buddy/provider/navigation_provider.dart';
-import 'package:contact_buddy/widgets/gnav/app_navigator.dart';
+import 'package:contact_buddy/provider/user_contact_provider.dart';
+import 'package:contact_buddy/widgets/bottom_nav/app_navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'provider/app_bar_icon_provider.dart';
@@ -25,6 +26,9 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(
           create: (context) => ContactsProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => UserContactProvider(),
         ),
         ChangeNotifierProvider(
           create: (context) => ImagesProvider(),

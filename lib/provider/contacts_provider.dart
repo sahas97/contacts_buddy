@@ -44,4 +44,7 @@ class ContactsProvider extends ChangeNotifier {
             contact['name'].toLowerCase().contains(query.toLowerCase()))
         .toList();
   }
+
+  //User contect CRUD
+  
 }

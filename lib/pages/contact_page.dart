@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:contact_buddy/models/contacts_model.dart';
 import 'package:contact_buddy/provider/contacts_provider.dart';
 import 'package:contact_buddy/validators/utils/snackbar_utils.dart';
@@ -7,6 +8,9 @@ import 'package:contact_buddy/widgets/fading_text.dart';
 import 'package:contact_buddy/widgets/show_update_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:line_icons/line_icons.dart';
 import 'package:provider/provider.dart';
 
 class ContactsList extends StatefulWidget {
@@ -34,10 +38,6 @@ class _ContactsListState extends State<ContactsList> {
     await _contactsProvider.fetchContacts();
   }
 
-  // Future<void> _addContact(Contact contact) async {
-  //   await _contactsProvider.addContact(contact);
-  // }
-
   Future<void> _updateContact(Contact updatedContact) async {
     await _contactsProvider.updateContact(updatedContact);
   }
@@ -59,14 +59,40 @@ class _ContactsListState extends State<ContactsList> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
+          Container(
+            margin: const EdgeInsets.only(
+              left: 25,
+              right: 25,
+              top: 5,
+              bottom: 20,
+            ),
+            height: 45,
             child: TextField(
               onChanged: _filterContacts,
-              decoration: const InputDecoration(
-                labelText: 'Search by Name',
-                prefixIcon: Icon(Icons.search),
+              decoration: InputDecoration(
+                labelStyle: GoogleFonts.montserrat(
+                  textStyle: const TextStyle(
+                    color: Colors.black38,
+                  ),
+                ),
+                labelText: 'search by name',
+                prefixIcon: const Icon(LineIcons.search),
+                focusedBorder: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                  borderSide: BorderSide(
+                    color: Colors.black,
+                    style: BorderStyle.solid,
+                  ),
+                ),
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(30)),
+                  borderSide: BorderSide(
+                    color: Colors.black87,
+                    style: BorderStyle.solid,
+                  ),
+                ),
               ),
             ),
           ),
@@ -78,7 +104,7 @@ class _ContactsListState extends State<ContactsList> {
                 return filteredContacts.isEmpty
                     ? const Center(
                         child: FadingText(
-                          message: 'No contacts available.',
+                          message: 'no contacts available.',
                         ),
                       )
                     : ListView.builder(
@@ -88,36 +114,48 @@ class _ContactsListState extends State<ContactsList> {
                               filteredContacts[index];
                           return Padding(
                             padding: const EdgeInsets.only(
-                              left: 5.0,
-                              right: 5.0,
+                              top: 10,
+                              left: 30.0,
+                              right: 30.0,
                               bottom: 3.0,
                             ),
-                            child: Card(
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  radius: 30,
-                                  backgroundImage: contact['imagePath'] != null
-                                      ? FileImage(File(contact['imagePath']))
-                                      : null,
-                                ),
-                                title: Text(contact['name']),
-                                subtitle: Text(contact['phoneNumber']),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
+                            child: GestureDetector(
+                              onTap: () {
+                                UpdateContactDialog.showUpdateDialog(
+                                  context,
+                                  nameController,
+                                  phoneNumberController,
+                                  emailConatoller,
+                                  Contact.fromMap(contact),
+                                  (updatedContact) {
+                                    _updateContact(updatedContact);
+                                  },
+                                );
+                              },
+                              child: Slidable(
+                                startActionPane: ActionPane(
+                                  motion: const StretchMotion(),
                                   children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.delete),
-                                      onPressed: () {
-                                        _deleteContact(contact['id']);
-                                        SnackbarUtils.showSnackbar(
-                                          context,
-                                          SnackbarMessages.contactDeleted,
-                                        );
+                                    SlidableAction(
+                                      onPressed: (context) async {
+                                        await FlutterPhoneDirectCaller
+                                            .callNumber(contact['phoneNumber']);
                                       },
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.edit),
-                                      onPressed: () {
+                                      icon: Icons.call,
+                                      foregroundColor: Colors.white,
+                                      backgroundColor: Colors.green.shade300,
+                                      borderRadius: const BorderRadius.only(
+                                        topLeft: Radius.circular(15),
+                                        bottomLeft: Radius.circular(15),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                endActionPane: ActionPane(
+                                  motion: const StretchMotion(),
+                                  children: [
+                                    SlidableAction(
+                                      onPressed: (context) {
                                         UpdateContactDialog.showUpdateDialog(
                                           context,
                                           nameController,
@@ -129,15 +167,82 @@ class _ContactsListState extends State<ContactsList> {
                                           },
                                         );
                                       },
+                                      icon: Icons.edit,
+                                      backgroundColor: Colors.red.shade300,
                                     ),
-                                    IconButton(
-                                      onPressed: () async {
-                                        await FlutterPhoneDirectCaller
-                                            .callNumber(contact['phoneNumber']);
+                                    SlidableAction(
+                                      onPressed: (context) {
+                                        _deleteContact(contact['id']);
+                                        SnackbarUtils.showSnackbar(context,
+                                            SnackbarMessages.contactDeleted);
                                       },
-                                      icon: const Icon(Icons.call),
+                                      icon: Icons.delete,
+                                      backgroundColor: Colors.red.shade300,
+                                      borderRadius: const BorderRadius.only(
+                                        topRight: Radius.circular(15),
+                                        bottomRight: Radius.circular(15),
+                                      ),
                                     ),
                                   ],
+                                ),
+                                child: SizedBox(
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          contact['imagePath'] == ''
+                                              ? CircleAvatar(
+                                                  radius: 20,
+                                                  backgroundColor:
+                                                      Colors.primaries[Random()
+                                                          .nextInt(Colors
+                                                              .primaries
+                                                              .length)],
+                                                  child: Text(
+                                                    contact['name'][0],
+                                                    style:
+                                                        GoogleFonts.montserrat(
+                                                      textStyle:
+                                                          const TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 18,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400),
+                                                    ),
+                                                  ),
+                                                )
+                                              : CircleAvatar(
+                                                  radius: 20,
+                                                  backgroundImage: contact[
+                                                              'imagePath'] !=
+                                                          null
+                                                      ? FileImage(File(
+                                                          contact['imagePath']))
+                                                      : null,
+                                                ),
+                                          const SizedBox(
+                                            width: 30,
+                                          ),
+                                          Text(
+                                            contact['name'],
+                                            style: GoogleFonts.montserrat(
+                                              textStyle: const TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w400),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      const Divider(
+                                        color: Colors.black12,
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
